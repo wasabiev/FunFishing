@@ -1,0 +1,17 @@
+name: FunFishing
+version: 0.1
+main: net.wasabi_server.funfishing.FunFishing
+description: Enjoy Fishing
+author: wasabiev
+commands:
+    fishing:
+      usage: /fishing - show help
+      aliases: [fish]
+      description: Show the FunFishing help.
+permissions:
+    fishing.status:
+        default: op
+        description: Allow status command.
+    fishing.debug:
+        default: op
+        description: Allow debug command.
