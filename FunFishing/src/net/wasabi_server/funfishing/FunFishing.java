@@ -40,27 +40,24 @@ public class FunFishing extends JavaPlugin {
 	 * 
 	 */
 
-	// ** Logger **
+	// Logger
 	public final static Logger log = Logger.getLogger("Minecraft");
 	public final static String logPrefix = "[FunFishing] ";
 	public final static String msgPrefix = "&6[FunFishing] &f";
 
-	// ** Listener **
+	// Listener
 	PlayerFishEventListener playerFishEventListener = new PlayerFishEventListener(
 			this);
 
-	// ** Commands **
+	// Commands
 	private List<BaseCommand> commands = new ArrayList<BaseCommand>();
 
-	// ** Instance **
+	// Instance
 	private static FunFishing instance;
 
-	// ** ある一定数釣ったらリセットされる釣り機能 **
+	// Fishing
 	HashMap<String, Integer> scores = new HashMap<String, Integer>();
-	private int score_limit = 50;
-
-	// ** 短期的な釣りイベント **
-	HashMap<String, Integer> comp_scores = new HashMap<String, Integer>();
+	private int score_limit = 30;
 
 	/**
 	 * プラグイン起動処理
@@ -144,6 +141,8 @@ public class FunFishing extends JavaPlugin {
 			if (getScore(p) >= score_limit) {
 				reward(p);
 				init();
+			} else {
+				Actions.message(p, msgPrefix + getScore(p) + "匹目のお魚を釣り上げました！");
 			}
 		}
 
@@ -180,17 +179,44 @@ public class FunFishing extends JavaPlugin {
 	}
 
 	/**
-	 * トップのプレイヤーを取得
+	 * 目標スコアを取得
 	 */
-	public String getTopPlayerName() {
+	public int getScoreLimit() {
+		return this.score_limit;
+	}
+
+	/**
+	 * トップのプレイヤーを取得
+	 * 
+	 * @return
+	 */
+	public String[] getTopPlayerNames() {
 		int current = 0;
 		String topName = "";
 		for (Map.Entry entry : this.scores.entrySet()) {
+			// 大きい値を持つプレイヤー名をtopNameに代入する
 			if (((Integer) entry.getValue()).intValue() > current) {
 				current = ((Integer) entry.getValue()).intValue();
 				topName = (String) entry.getKey();
 			}
+			// 同じ値の場合はカンマ切りの文字列とする
+			else if (((Integer) entry.getValue()).intValue() == current) {
+				topName = topName + "," + (String) entry.getKey();
+			}
 		}
+		String[] topNames = topName.split(",");
+		return topNames;
+	}
+
+	/**
+	 * トップのプレイヤーの文字列を取得
+	 */
+	public String getTopPlayerName() {
+		StringBuilder builder = new StringBuilder();
+		for (String str : this.getTopPlayerNames()) {
+			builder.append(str).append(", ");
+		}
+		String topName = builder.substring(0, builder.length() - 2);
 		return topName;
 	}
 
@@ -198,9 +224,11 @@ public class FunFishing extends JavaPlugin {
 	 * トップのプレイヤーのスコアを取得
 	 */
 	public int getTopScore() {
-		if (!this.getTopPlayerName().equals("")) {
-			return ((Integer) this.scores.get(this.getTopPlayerName()))
-					.intValue();
+		int topScore;
+		String[] str = this.getTopPlayerNames().clone();
+		if (!str[0].equals("")) {
+			topScore = ((Integer) this.scores.get(str[0])).intValue();
+			return topScore;
 		} else {
 			return 0;
 		}
@@ -309,37 +337,6 @@ public class FunFishing extends JavaPlugin {
 				+ "目標数に達した為、今まで釣り上げた魚のカウントをリセットしました！");
 
 	}
-
-	// ** 短期的な釣りイベント **
-	// ** ここから未完成ヾ(｀・ω・´)ノ **
-	/**
-	 * プレイヤーを追加
-	 */
-	public void comp_addPlayer(Player p) {
-		if (!this.comp_scores.containsKey(p.getName())) {
-			this.comp_scores.put(p.getName(), Integer.valueOf(0));
-		} else {
-			Actions.message(p, msgPrefix + "既に釣りイベントに参加しています！");
-		}
-	}
-
-	/**
-	 * スコア追加
-	 */
-	public void comp_addScore(Player p) {
-		if (this.comp_scores.containsKey(p.getName())) {
-			this.comp_scores.put(p.getName(), Integer.valueOf(getScore(p) + 1));
-		}
-	}
-
-	/**
-	 * プレイヤーのスコア取得（参加チェック済み）
-	 */
-	public int comp_getScore(Player p) {
-		return ((Integer) this.comp_scores.get(p.getName())).intValue();
-	}
-
-	// ** ここまで未完成ヾ(｀・ω・´)ノ **
 
 	/* getter */
 	/**

@@ -14,17 +14,20 @@ public class StatusCommand extends BaseCommand {
 
 	@Override
 	public void execute() throws CommandException {
+		String[] str = this.plugin.getTopPlayerNames().clone();
+		Actions.message(sender,
+				msgPrefix + "目標スコアは" + this.plugin.getScoreLimit() + "匹です。");
 		if (this.plugin.beScored(player)) {
 			Actions.message(sender,
 					msgPrefix + "あなたは" + this.plugin.getScore(player)
 							+ "匹の魚を捕まえています。");
-		} else {
-			Actions.message(sender, msgPrefix + "あなたはまだ魚を捕まえていません。");
 		}
-		if (!this.plugin.getTopPlayerName().equals("")) {
+		if (!str[0].equals("")) {
 			Actions.message(sender,
 					msgPrefix + "現在のトップは" + this.plugin.getTopPlayerName()
-							+ "（" + this.plugin.getTopScore() + "匹）です。");
+							+ "(" + this.plugin.getTopScore() + ")です。");
+		} else {
+			Actions.message(sender, msgPrefix + "現在記録がありません。");
 		}
 	}
 
