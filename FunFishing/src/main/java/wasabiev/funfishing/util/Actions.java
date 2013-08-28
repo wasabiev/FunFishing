@@ -1,4 +1,4 @@
-package net.wasabi_server.funfishing.util;
+package wasabiev.funfishing.util;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.wasabi_server.funfishing.FunFishing;
+import wasabiev.funfishing.FunFishing;
 
 public class Actions {
 

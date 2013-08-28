@@ -1,6 +1,6 @@
-package net.wasabi_server.funfishing.command;
+package wasabiev.funfishing.command;
 
-import net.wasabi_server.funfishing.util.Actions;
+import wasabiev.funfishing.util.Actions;
 
 import org.bukkit.command.CommandException;
 

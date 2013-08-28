@@ -1,4 +1,4 @@
-package net.wasabi_server.funfishing.command;
+package wasabiev.funfishing.command;
 
 import org.bukkit.command.CommandException;
 
@@ -17,7 +17,7 @@ public class StatusAllCommand extends BaseCommand {
 
 	@Override
 	public boolean permission() {
-		return sender.hasPermission("fishing.statusall");
+		return sender.hasPermission("fishing.status");
 	}
 
 }

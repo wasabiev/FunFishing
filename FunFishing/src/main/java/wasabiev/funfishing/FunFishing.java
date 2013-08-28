@@ -1,4 +1,4 @@
-package net.wasabi_server.funfishing;
+package wasabiev.funfishing;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,15 +21,21 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import net.wasabi_server.funfishing.command.BaseCommand;
-import net.wasabi_server.funfishing.command.DebugCommand;
-import net.wasabi_server.funfishing.command.HelpCommand;
-import net.wasabi_server.funfishing.command.StatusAllCommand;
-import net.wasabi_server.funfishing.command.StatusCommand;
-import net.wasabi_server.funfishing.listener.PlayerFishEventListener;
-import net.wasabi_server.funfishing.util.Actions;
+import wasabiev.funfishing.command.BaseCommand;
+import wasabiev.funfishing.command.DebugCommand;
+import wasabiev.funfishing.command.EventStatusCommand;
+import wasabiev.funfishing.command.HelpCommand;
+import wasabiev.funfishing.command.JoinCommand;
+import wasabiev.funfishing.command.ReadyCommand;
+import wasabiev.funfishing.command.ResetCommand;
+import wasabiev.funfishing.command.StartCommand;
+import wasabiev.funfishing.command.StatusAllCommand;
+import wasabiev.funfishing.command.StatusCommand;
+import wasabiev.funfishing.listener.PlayerFishEventListener;
+import wasabiev.funfishing.util.Actions;
 
 public class FunFishing extends JavaPlugin {
 
@@ -63,6 +69,10 @@ public class FunFishing extends JavaPlugin {
 	HashMap<String, Integer> scores = new HashMap<String, Integer>();
 	private int score_limit = 30;
 
+	// Score-board
+	Scoreboard sb;
+	ScoreboardManager sbm;
+
 	/**
 	 * プラグイン起動処理
 	 */
@@ -70,7 +80,8 @@ public class FunFishing extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		PluginManager pm = getServer().getPluginManager();
-		ScoreboardManager manager = getServer().getScoreboardManager();
+		sbm = getServer().getScoreboardManager();
+		sb = sbm.getNewScoreboard();
 		if (!pm.isPluginEnabled(this)) {
 			return;
 		}
@@ -101,10 +112,18 @@ public class FunFishing extends JavaPlugin {
 	 * コマンドを登録
 	 */
 	private void registerCommands() {
+		// ベーシックコマンド
 		commands.add(new HelpCommand());
 		commands.add(new DebugCommand());
+		// FunFishing
 		commands.add(new StatusCommand());
 		commands.add(new StatusAllCommand());
+		// FishingEvent
+		commands.add(new StartCommand());
+		commands.add(new ReadyCommand());
+		commands.add(new JoinCommand());
+		commands.add(new EventStatusCommand());
+		commands.add(new ResetCommand());
 	}
 
 	/**
@@ -377,9 +396,14 @@ public class FunFishing extends JavaPlugin {
 	}
 
 	/**
-	 * インスタンスを返す
-	 * 
-	 * @return MotdManagerインスタンス
+	 * スコアボードを返す
+	 */
+	public Scoreboard getScoreBoard() {
+		return sb;
+	}
+
+	/**
+	 * FunFishingインスタンスを返す
 	 */
 	public static FunFishing getInstance() {
 		return instance;

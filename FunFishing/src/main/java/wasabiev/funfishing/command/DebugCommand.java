@@ -1,4 +1,4 @@
-package net.wasabi_server.funfishing.command;
+package wasabiev.funfishing.command;
 
 import org.bukkit.command.CommandException;
 

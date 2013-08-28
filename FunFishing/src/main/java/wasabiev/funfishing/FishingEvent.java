@@ -1,14 +1,17 @@
-package net.wasabi_server.funfishing;
+package wasabiev.funfishing;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import net.wasabi_server.funfishing.util.Actions;
-import net.wasabi_server.funfishing.FunFishing;
+import wasabiev.funfishing.util.Actions;
+import wasabiev.funfishing.FunFishing;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 
 public class FishingEvent {
 
@@ -82,6 +85,7 @@ public class FishingEvent {
 		if (ready && !start) {
 			ready = false;
 			start = true;
+			displayScore();
 			startScheduler();
 			this.sendToFisher("釣りイベントを開始しました！");
 		} else if (start) {
@@ -117,6 +121,7 @@ public class FishingEvent {
 		remain_sec = -1;
 		ready = false;
 		start = false;
+		disableScoreboard();
 		log.info(logPrefix + "Initializing FishingEvent Data...Succeeded!");
 	}
 
@@ -210,6 +215,33 @@ public class FishingEvent {
 	}
 
 	/**
+	 * スコアボードを表示
+	 */
+	public void displayScore() {
+		Objective objective = this.plugin.getScoreBoard().registerNewObjective(
+				"Fishing", "dummy");
+		objective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+		objective.setDisplayName("Fishing Event");
+		for (Map.Entry entry : this.scores.entrySet()) {
+			Player player = this.plugin.getServer().getPlayer(
+					(String) entry.getKey());
+			if (player.isOnline()) {
+				Score score = objective.getScore(player);
+				score.setScore(this.scores.get(entry).intValue());
+			}
+		}
+	}
+
+	/**
+	 * スコアボードを初期化
+	 */
+	public void disableScoreboard() {
+		for (Player player : this.plugin.getServer().getOnlinePlayers()) {
+			player.setScoreboard(this.plugin.sbm.getNewScoreboard());
+		}
+	}
+
+	/**
 	 * 参加者にメッセージを送信
 	 */
 	public void sendToFisher(String message) {
@@ -221,4 +253,8 @@ public class FishingEvent {
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 */
 }

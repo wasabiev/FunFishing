@@ -1,4 +1,4 @@
-package net.wasabi_server.funfishing.command;
+package wasabiev.funfishing.command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.wasabi_server.funfishing.FunFishing;
-import net.wasabi_server.funfishing.util.Actions;
+import wasabiev.funfishing.FunFishing;
+import wasabiev.funfishing.util.Actions;
 
 public abstract class BaseCommand {
     // Logger
