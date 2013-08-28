@@ -1,9 +1,12 @@
 package net.wasabi_server.funfishing;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -18,10 +21,12 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import net.wasabi_server.funfishing.command.BaseCommand;
 import net.wasabi_server.funfishing.command.DebugCommand;
 import net.wasabi_server.funfishing.command.HelpCommand;
+import net.wasabi_server.funfishing.command.StatusAllCommand;
 import net.wasabi_server.funfishing.command.StatusCommand;
 import net.wasabi_server.funfishing.listener.PlayerFishEventListener;
 import net.wasabi_server.funfishing.util.Actions;
@@ -35,7 +40,6 @@ public class FunFishing extends JavaPlugin {
 	 * 
 	 * HashMapの読み書き
 	 * 
-	 * 釣りイベント管理機能の実装
 	 * 
 	 * 
 	 */
@@ -66,6 +70,7 @@ public class FunFishing extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		PluginManager pm = getServer().getPluginManager();
+		ScoreboardManager manager = getServer().getScoreboardManager();
 		if (!pm.isPluginEnabled(this)) {
 			return;
 		}
@@ -99,6 +104,7 @@ public class FunFishing extends JavaPlugin {
 		commands.add(new HelpCommand());
 		commands.add(new DebugCommand());
 		commands.add(new StatusCommand());
+		commands.add(new StatusAllCommand());
 	}
 
 	/**
@@ -235,6 +241,29 @@ public class FunFishing extends JavaPlugin {
 	}
 
 	/**
+	 * すべてのスコアを降順で表示
+	 */
+	public void showStatusAll(Player player) {
+		// ソート用にListを生成
+		List<Map.Entry<String, Integer>> entries = new ArrayList<Map.Entry<String, Integer>>(
+				scores.entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
+			@Override
+			public int compare(Entry<String, Integer> entry1,
+					Entry<String, Integer> entry2) {
+				return ((Integer) entry2.getValue()).compareTo((Integer) entry1
+						.getValue());
+			}
+		});
+		// 内容を表示
+		Actions.message(player, "===Fishing Status===");
+		for (Entry<String, Integer> s : entries) {
+			Actions.message(player, s.getKey() + ": " + s.getValue());
+		}
+		Actions.message(player, "==================");
+	}
+
+	/**
 	 * 賞品付与
 	 */
 	@SuppressWarnings("deprecation")
@@ -335,7 +364,8 @@ public class FunFishing extends JavaPlugin {
 		// リセットに関してブロードキャスト
 		Actions.broadcastMessage(msgPrefix
 				+ "目標数に達した為、今まで釣り上げた魚のカウントをリセットしました！");
-
+		log.info(logPrefix
+				+ "Initializing Fishing Data(Not Event)...Succeeded!");
 	}
 
 	/* getter */
