@@ -26,12 +26,12 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 import wasabiev.funfishing.command.BaseCommand;
 import wasabiev.funfishing.command.DebugCommand;
-import wasabiev.funfishing.command.EventStatusCommand;
+//import wasabiev.funfishing.command.EventStatusCommand;
 import wasabiev.funfishing.command.HelpCommand;
-import wasabiev.funfishing.command.JoinCommand;
-import wasabiev.funfishing.command.ReadyCommand;
-import wasabiev.funfishing.command.ResetCommand;
-import wasabiev.funfishing.command.StartCommand;
+//import wasabiev.funfishing.command.JoinCommand;
+//import wasabiev.funfishing.command.ReadyCommand;
+//import wasabiev.funfishing.command.ResetCommand;
+//import wasabiev.funfishing.command.StartCommand;
 import wasabiev.funfishing.command.StatusAllCommand;
 import wasabiev.funfishing.command.StatusCommand;
 import wasabiev.funfishing.listener.PlayerFishEventListener;
@@ -119,11 +119,11 @@ public class FunFishing extends JavaPlugin {
 		commands.add(new StatusCommand());
 		commands.add(new StatusAllCommand());
 		// FishingEvent
-		commands.add(new StartCommand());
-		commands.add(new ReadyCommand());
-		commands.add(new JoinCommand());
-		commands.add(new EventStatusCommand());
-		commands.add(new ResetCommand());
+		//commands.add(new StartCommand());
+		//commands.add(new ReadyCommand());
+		//commands.add(new JoinCommand());
+		//commands.add(new EventStatusCommand());
+		//commands.add(new ResetCommand());
 	}
 
 	/**
